@@ -1,2 +1,2 @@
-store_name,store_name_r,url
-すし いちかん,すし_いちかん,https://tabelog.com/tokyo/A1303/A130301/13218711/
+store_name,store_name_r,path,url
+すし いちかん,すし_いちかん,./data/tabelog_review_data/tabelog_すし_いちかん_review_data.csv,https://tabelog.com/tokyo/A1303/A130301/13218711/
