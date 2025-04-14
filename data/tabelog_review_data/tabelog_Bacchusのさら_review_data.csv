@@ -1,4 +1,4 @@
-﻿user_id,overall_rating,food,service,atmosphere,price,drink
+user_id,overall_rating,food,service,atmosphere,price,drink
 000001,4.5,4.0,5.0,4.0,5.0,4.0
 000002,4.2,4.2,4.2,3.8,4.2,4.0
 000003,5.0,,,,,
