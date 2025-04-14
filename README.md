@@ -31,10 +31,19 @@ Tabelog ratings include:
 - **Overall Rating**: Reviewer's overall rating of the restaurant (independent of all other categorical ratings)
 
 ## Running the App
-Assuming required packages are downloaded:
-1. Start the venv `source /venv/bin/activate` (path to your venv)
-2. Run `python3 -m streamlit run tabelog_cf_app.py`
-3. Let the app open in your browser
+1. Clone this repository and download all the packages from `requirements.txt`
+2. Start the venv `source /venv/bin/activate` (path to your venv)
+3. Run `python3 -m streamlit run tabelog_cf_app.py`
+4. See console and copy the local host link and open it in your browser or let the app open automatically
 
 ### Getting Started
 Navigate to the "Restaurant Analysis" page to begin exploring restaurant ratings!
+
+### Adding Restaurant URLs
+If you'd like to add your own restaurants, visit https://tabelog.com/en, and pick out restaurants. **Before adding them, remove the "en" part from the link.
+Example: `https://tabelog.com/en/tokyo/...` ----->  `https://tabelog.com/tokyo/...`
+
+Here are some examples restaurants you can try entering on the app:
+- https://tabelog.com/hyogo/A2801/A280109/28071150/ - A ramen shop in Hyogo
+- https://tabelog.com/tokyo/A1302/A130201/13215419/ - A brewery in Tokyo
+- https://tabelog.com/okayama/A3301/A330101/33015797/ - A pizza place in Okayama
