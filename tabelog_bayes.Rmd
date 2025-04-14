@@ -1,0 +1,215 @@
+---
+title: "tabelog_bayes"
+output: html_document
+date: "2025-04-12"
+---
+
+##Tabelog - Bayesian Modeling
+
+```{r setup, include=FALSE}
+library(brms)
+library(caret)
+
+set.seed(123)
+```
+
+```{r}
+# read data
+data <- read.csv("./data/tabelog_tokyo_data.csv")
+
+# categorical factoring for genre
+genre_levels <- c(
+  "chinese", "curry", "italian", "izakaya", "japanese", "korea",
+  "pizza", "ramen", "seafood", "sushi", "sweets", "syabusyabu",
+  "udon", "washoku", "yakiniku"
+)
+data$genre <- factor(data$genre, levels = genre_levels)
+
+# if restaurant doesn't have daytime_price
+# copy over nighttime price
+data$daytime_price_low[is.na(data$daytime_price_low)] <- data$nighttime_price_low[is.na(data$daytime_price_low)]
+data$daytime_price_high[is.na(data$daytime_price_high)] <- data$nighttime_price_high[is.na(data$daytime_price_high)]
+
+# standardize & scaling
+numerical_features <- c(
+  "review_count", "daytime_price_low", "daytime_price_high",
+  "nighttime_price_low", "nighttime_price_high", 
+  "photo_count", "like_count", "bookmark_count"
+)
+
+scaled_features <- scale(data[, numerical_features])
+data_scaled <- as.data.frame(scaled_features)
+
+data_scaled$score <- data$score
+data_scaled$genre <- data$genre
+
+# train test split (80-20)
+train_indices <- createDataPartition(data_scaled$score, p = 0.8, list = FALSE)
+Xtrain <- data_scaled[train_indices, ]
+Xtest <- data_scaled[-train_indices, ]
+```
+
+#Bayesian Linear Model (Gaussian):
+
+```{r}
+prior_gaus <- default_prior(score ~ review_count + daytime_price_low + daytime_price_high +
+                              nighttime_price_low + nighttime_price_high + 
+                              photo_count + like_count + bookmark_count,
+                            data = Xtrain,
+                            family = gaussian())
+
+tabelog_brm <- brm(score ~ review_count + daytime_price_low + daytime_price_high +
+                     nighttime_price_low + nighttime_price_high + 
+                     photo_count + like_count + bookmark_count,
+                   data = Xtrain,
+                   family = gaussian(),
+                   chains = 4,
+                   iter = 10000,
+                   warmup = 1800,
+                   prior = prior_gaus)
+```
+
+```{r}
+plot(tabelog_brm)
+```
+
+```{r}
+summary(tabelog_brm)
+```
+
+```{r}
+bayes_R2(tabelog_brm)
+```
+
+```{r}
+preds <- posterior_predict(tabelog_brm, newdata = Xtest)
+
+means <- colMeans(preds)
+trues <- Xtest$score
+
+cor(means, trues)
+```
+
+#Bayesian Beta Regression Model (Beta):
+
+```{r}
+#scaling 'score' to be between 0 and 1
+score_scaled <- data$score / 5
+
+data_scaled$score <- score_scaled
+
+# train test split (80-20)
+train_indices <- createDataPartition(data_scaled$score, p = 0.8, list = FALSE)
+Xtrain <- data_scaled[train_indices, ]
+Xtest <- data_scaled[-train_indices, ]
+```
+
+```{r}
+prior_beta <- default_prior(score ~ review_count + daytime_price_low + daytime_price_high + 
+                              nighttime_price_low + nighttime_price_high + 
+                              photo_count + like_count + bookmark_count,
+                            data = Xtrain,
+                            family = Beta())
+
+tabelog_brm_beta <- brm(score ~ review_count + daytime_price_low + daytime_price_high +
+                     nighttime_price_low + nighttime_price_high + 
+                     photo_count + like_count + bookmark_count,
+                     data = Xtrain,
+                     family = Beta(),
+                     chains = 4,
+                     iter = 10000,
+                     warmup = 1800,
+                     prior = prior_beta)
+```
+
+```{r}
+plot(tabelog_brm_beta)
+```
+
+```{r}
+summary(tabelog_brm_beta)
+```
+
+```{r}
+bayes_R2(tabelog_brm_beta)
+```
+
+```{r}
+preds <- posterior_predict(tabelog_brm_beta, newdata = Xtest)
+
+means <- colMeans(preds)
+trues <- Xtest$score
+
+cor(means, trues)
+```
+
+#Predicting Best Restaurants for a User:
+Based on a user-inputted review of desired features of a restaurant, find 5 most similar restaurants to recommend.
+
+```{r}
+cosine_similarity <- function(a, b) {
+  sum(a * b) / (sqrt(sum(a^2)) * sqrt(sum(b^2)))
+}
+```
+
+```{r}
+# user-inputted review of desired features
+# standardized values - lower = cheaper
+fake_review <- data.frame(
+  review_count = 10,
+  daytime_price_low = -0.5,   # standardized lower value = cheaper
+  daytime_price_high = 0.8,
+  nighttime_price_low = -0.5,
+  nighttime_price_high = 0.8,
+  photo_count = -0.2,
+  like_count = 0.1,
+  bookmark_count = 0.1
+)
+
+# user-inputted desired genre
+fake_genre <- "syabusyabu"
+
+# only include user desired genre
+user_genre <- data$genre == fake_genre
+data_genre <- data[user_genre, ]
+data_scaled_genre <- data_scaled[user_genre, ]
+
+# convert data of restaurants to matrix of numerical features
+data_matrix <- as.matrix(data_scaled_genre[, numerical_features])
+
+# convert user review to vector
+fake_vector <- as.numeric(fake_review[1, numerical_features])
+
+# cosine similarities between each restaurant and user review
+similarities <- apply(data_matrix, 1, function(row) cosine_similarity(row, fake_vector))
+
+# predict score of restaurant using model
+pred_scores <- posterior_predict(tabelog_brm_beta, newdata = data_scaled_genre)
+expected_ratings <- colMeans(pred_scores)
+
+# top 5 most similar restaurants to user review
+top5 <- order(similarities, decreasing = TRUE)[1:5]
+top5restaurants <- data_genre[top5, ]
+top5restaurants$similarity <- similarities[top5]
+top5restaurants$pred_score <- expected_ratings[top5]
+```
+
+Finding most similar restaurants, according to cosine similarity scores:
+
+```{r}
+print(top5restaurants[, c("store_name", "genre", "score", "pred_score", "similarity")])
+```
+
+```{r}
+# top 5 highest rated restaurants to user review
+top5_score <- order(expected_ratings, decreasing = TRUE)[1:5]
+top5restaurants_score <- data_genre[top5_score, ]
+top5restaurants_score$similarity <- similarities[top5_score]
+top5restaurants_score$pred_score <- expected_ratings[top5_score]
+```
+
+Finding highest predicted scored restaurants:
+
+```{r}
+print(top5restaurants_score[, c("store_name", "genre", "score", "pred_score", "similarity")])
+```
