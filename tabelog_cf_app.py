@@ -880,6 +880,8 @@ def analysis_page():
 
         # Toggle to show / hide graphs
         if st.session_state.imputed_df is not None:
+            # Get category names once there is an imputed DataFrame
+            category_names = st.session_state.imputed_df.columns[1:]
             show_graphs = st.checkbox("Show visualizations", value=st.session_state.show_graphs)
             st.session_state.show_graphs = show_graphs
 
