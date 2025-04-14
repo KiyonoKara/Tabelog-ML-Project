@@ -2,3 +2,6 @@ store_name,store_name_r,path,url
 すし いちかん,すし_いちかん,./data/tabelog_review_data/tabelog_すし_いちかん_review_data.csv,https://tabelog.com/tokyo/A1303/A130301/13218711/
 Bacchusのさら.,Bacchusのさら,./data/tabelog_review_data/tabelog_Bacchusのさら_review_data.csv,https://tabelog.com/tokyo/A1301/A130101/13137480
 Ramen FeeL,Ramen_FeeL,./data/tabelog_review_data/tabelog_Ramen_FeeL_review_data.csv,https://tabelog.com/tokyo/A1330/A133003/13254631/
+よろにく,よろにく,./data/tabelog_review_data/tabelog_よろにく_review_data.csv,https://tabelog.com/tokyo/A1306/A130602/13042979/
+日本橋とんかつ 一 日本橋本店,日本橋とんかつ_一_日本橋本店,./data/tabelog_review_data/tabelog_日本橋とんかつ_一_日本橋本店_review_data.csv,https://tabelog.com/tokyo/A1302/A130202/13272021/
+寿斗 ふかがわ,寿斗_ふかがわ,./data/tabelog_review_data/tabelog_寿斗_ふかがわ_review_data.csv,https://tabelog.com/kyoto/A2601/A260202/26006733/
