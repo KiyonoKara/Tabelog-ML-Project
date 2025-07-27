@@ -47,3 +47,8 @@ Here are some examples restaurants you can try entering on the app:
 - https://tabelog.com/hyogo/A2801/A280109/28071150/ - A ramen shop in Hyogo
 - https://tabelog.com/tokyo/A1302/A130201/13215419/ - A brewery in Tokyo
 - https://tabelog.com/okayama/A3301/A330101/33015797/ - A pizza place in Okayama
+
+## Remarks
+- Content-Based Filtering might've been a much better fit instead of (Item-Item) Collaborative Filtering since there were more than type of rating and there were daytime / nighttime prices.
+- Collaborative Filtering tended to compute higher-than-expected ratings which didn't always reflect the overall consensus due missing values being imputed then used.
+- In a different approach, better methods like Content-Based Filtering would be used to properly predict ratings and explore (Japanese) restaurant data.
