@@ -52,3 +52,8 @@ Here are some examples restaurants you can try entering on the app:
 - Content-Based Filtering might've been a much better fit instead of (Item-Item) Collaborative Filtering since there were more than type of rating and there were daytime / nighttime prices.
 - Collaborative Filtering tended to compute higher-than-expected ratings which didn't always reflect the overall consensus due missing values being imputed then used.
 - In a different approach, better methods like Content-Based Filtering would be used to properly predict ratings and explore (Japanese) restaurant data.
+
+### Things to consider doing in the future
+- Automatically parse Tabelog URLs to get the Japanese webpages only (or adjust the scraper for the English site).
+- Use Content-Based Filtering.
+- Cleanup and document the data collection and processing.
