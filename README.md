@@ -57,3 +57,7 @@ Here are some examples restaurants you can try entering on the app:
 - Automatically parse Tabelog URLs to get the Japanese webpages only (or adjust the scraper for the English site).
 - Use Content-Based Filtering.
 - Cleanup and document the data collection and processing.
+
+## References
+- https://qiita.com/toshiyuki_tsutsui/items/f143946944a428ed105b
+- https://myfrankblog.com/find_best_restaurant_from_tabelog/
