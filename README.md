@@ -1,6 +1,8 @@
 # Tabelog ML Project
 It's a Tabelog ML Project. Explores Japanese restaurant data with collaborative filtering and Bayesian modeling.
 
+![Tabelog Image](./media/tabelog_image.png)
+
 ## Project Overview
     
 This application uses **item-item** collaborative filtering 
