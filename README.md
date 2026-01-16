@@ -60,6 +60,7 @@ Here are some examples restaurants you can try entering on the app:
 - Use Content-Based Filtering.
 - Cleanup and document the data collection and processing.
 - Could use an NLP-based solution such as `Word2Vec` (see https://qiita.com/toshiyuki_tsutsui/items/19590b464f15f845efcd)
+- SVD Collaborative Filtering.
 
 ## References
 - https://qiita.com/toshiyuki_tsutsui/items/f143946944a428ed105b
